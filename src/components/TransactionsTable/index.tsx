@@ -1,6 +1,33 @@
+import { createServer } from 'miragejs';
+import { useEffect } from 'react';
 import { Container } from './styles';
 
+createServer({
+	routes() {
+		this.namespace = 'api';
+
+		this.get('/transactions', () => {
+			return [
+				{
+					id: 1,
+					title: 'Transacation 1',
+					amount: 400,
+					type: 'deposit',
+					category: 'Food',
+					createdAt: new Date(),
+				},
+			];
+		});
+	},
+});
+
 export default function TransactionsTable() {
+	useEffect(() => {
+		fetch('http:localhost:1234/api/transactions')
+			.then((res) => res.json())
+			.then((data) => console.log(data));
+	}, []);
+
 	return (
 		<Container>
 			<table>
