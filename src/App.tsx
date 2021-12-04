@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from 'react-modal';
 import Dashboard from './components/Dashboard';
 import Header from './components/Header';
+import TransactionModal from './components/TransactionModal';
 import { GlobalStyle } from './styles/global';
 
 // Make sure to bind modal to root element (accessibility)
@@ -23,9 +24,7 @@ export default function App() {
 			<Header onOpenModal={openModalHandler} />
 			<Dashboard />
 
-			<Modal isOpen={isOpen} onRequestClose={closeModalHandler}>
-				<h2>hey</h2>
-			</Modal>
+			<TransactionModal isOpen={isOpen} onRequestClose={closeModalHandler} />
 			<GlobalStyle />
 		</>
 	);
