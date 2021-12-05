@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Transaction } from '../../interfaces/Transaction';
-import axios from '../../services/api';
+import useTransactions from '../../hooks/use-transactions';
 import { formatDate, formatPrice } from '../../utils/formats';
 import { Container } from './styles';
 
 export default function TransactionsTable() {
-	const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-	useEffect(() => {
-		axios.get('transactions').then(({ data }) => setTransactions(data.transactions));
-	}, []);
+	const transactions = useTransactions();
 
 	return (
 		<Container>
