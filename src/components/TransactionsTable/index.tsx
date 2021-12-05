@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Transaction } from '../../interfaces/Transaction';
 import axios from '../../services/api';
-import { formatPrice } from '../../utils/formats';
+import { formatDate, formatPrice } from '../../utils/formats';
 import { Container } from './styles';
 
 export default function TransactionsTable() {
@@ -29,7 +29,7 @@ export default function TransactionsTable() {
 							<td>{title}</td>
 							<td className={type}>{formatPrice(amount)}</td>
 							<td>{category}</td>
-							<td>{createdAt}</td>
+							<td>{formatDate(createdAt)}</td>
 						</tr>
 					))}
 				</tbody>
