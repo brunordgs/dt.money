@@ -1,10 +1,14 @@
-import { useEffect } from 'react';
-import { Container } from './styles';
+import { useEffect, useState } from 'react';
+import { Transaction } from '../../interfaces/Transaction';
 import axios from '../../services/api';
+import { formatPrice } from '../../utils/formats';
+import { Container } from './styles';
 
 export default function TransactionsTable() {
+	const [transactions, setTransactions] = useState<Transaction[]>([]);
+
 	useEffect(() => {
-		axios.get('transactions').then(({ data }) => console.log(data));
+		axios.get('transactions').then(({ data }) => setTransactions(data.transactions));
 	}, []);
 
 	return (
@@ -20,26 +24,14 @@ export default function TransactionsTable() {
 				</thead>
 
 				<tbody>
-					<tr>
-						<td>Desenvolvimento de website</td>
-						<td>$12.000</td>
-						<td>Desenvolvimento</td>
-						<td>20/02/2021</td>
-					</tr>
-
-					<tr>
-						<td>Desenvolvimento de website</td>
-						<td className="deposit">$12.000</td>
-						<td>Desenvolvimento</td>
-						<td>20/02/2021</td>
-					</tr>
-
-					<tr>
-						<td>Aluguel</td>
-						<td className="withdraw">-$1.100</td>
-						<td>Casa</td>
-						<td>17/02/2021</td>
-					</tr>
+					{transactions.map(({ id, title, amount, type, category, createdAt }) => (
+						<tr key={id}>
+							<td>{title}</td>
+							<td className={type}>{formatPrice(amount)}</td>
+							<td>{category}</td>
+							<td>{createdAt}</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 		</Container>
