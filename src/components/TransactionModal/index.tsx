@@ -3,8 +3,8 @@ import Modal from 'react-modal';
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
+import useTransactions from '../../hooks/useTransactions';
 import { Container, RadioBox, TransactionTypeContainer } from './styles';
-import axios from '../../services/api';
 
 interface Props {
 	isOpen: boolean;
@@ -12,22 +12,33 @@ interface Props {
 }
 
 export default function TransactionModal({ isOpen, onRequestClose }: Props) {
-	const [title, setTitle] = useState('');
-	const [value, setValue] = useState(0);
-	const [category, setCategory] = useState('');
-	const [type, setType] = useState('deposit');
+	const { createTransaction } = useTransactions();
 
-	function handleCreateNewTransaction(e: FormEvent) {
+	const [title, setTitle] = useState('');
+	const [amount, setAmount] = useState(0);
+	const [type, setType] = useState<'deposit' | 'withdraw'>('deposit');
+	const [category, setCategory] = useState('');
+
+	async function handleCreateNewTransaction(e: FormEvent) {
 		e.preventDefault();
 
-		const data = {
+		const transaction = {
 			title,
-			value,
+			amount,
 			type,
 			category,
 		};
 
-		axios.post('transactions', data);
+		await createTransaction(transaction);
+
+		// Clear fields before close modal
+		setTitle('');
+		setAmount(0);
+		setType('deposit');
+		setCategory('');
+
+		// Close modal after form submit
+		onRequestClose();
 	}
 
 	return (
@@ -53,8 +64,8 @@ export default function TransactionModal({ isOpen, onRequestClose }: Props) {
 				<input
 					type="number"
 					placeholder="Valor"
-					value={value}
-					onChange={(e) => setValue(+e.target.value)}
+					value={amount}
+					onChange={(e) => setAmount(+e.target.value)}
 				/>
 
 				<TransactionTypeContainer>
